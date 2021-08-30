@@ -16,6 +16,13 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/// Trait that all commands must implement.
 pub trait Command {
-    fn execute(&self) -> Result<(), ()>;
+    fn execute(&self) -> Result<(), CommandError>;
+}
+
+/// Errors produced by invalid commands
+pub enum CommandError {
+    /// The request identified used in the command is already used.
+    IdentifierAlreadyUsed(String),
 }

@@ -17,11 +17,35 @@
 */
 
 use crate::domain::command::Command;
+use crate::domain::command::CommandError;
 
-struct CreateProject(String);
+struct CreateProject {
+    code: String,
+    name: String,
+}
+
+impl CreateProject {
+    fn new(code: &str, name: &str) -> Self {
+        Self {
+            code: code.into(),
+            name: name.into(),
+        }
+    }
+}
 
 impl Command for CreateProject {
-    fn execute(&self) -> Result<(), ()> {
+    fn execute(&self) -> Result<(), CommandError> {
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_create_project() {
+        let command = CreateProject::new("project", "some project");
+        assert!(command.execute().is_ok());
     }
 }
