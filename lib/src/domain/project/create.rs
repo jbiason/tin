@@ -1,5 +1,5 @@
 /*
-  TIN - Time Tracking Application
+  TIN - Time tracking application
   Copyright (C) 2021  Julio Biason
 
   This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,33 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-/// Trait/tag for DTOs
-pub trait Dto {}
+use crate::domain::command::Command;
+use crate::domain::command::CommandError;
 
-/// Trait that all commands must implement.
-pub trait Command<T: Dto> {
-    fn execute(self) -> Result<T, CommandError>;
+use super::dto::Project;
+
+struct Create(Project);
+
+impl Create {
+    fn new(project: Project) -> Self {
+        Self(project)
+    }
 }
 
-/// Errors produced by invalid commands
-pub enum CommandError {
-    /// The request identified used in the command is already used.
-    IdentifierAlreadyUsed(String),
+impl Command<Project> for Create {
+    fn execute(self) -> Result<Project, CommandError> {
+        Ok(self.0)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_create_project() {
+        let project = Project::new("project", "some project");
+        let command = Create::new(project);
+        assert!(command.execute().is_ok());
+    }
 }

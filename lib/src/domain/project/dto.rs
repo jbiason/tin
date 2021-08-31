@@ -16,16 +16,15 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::domain::command::Command;
-use crate::domain::command::CommandError;
+use crate::domain::command::Dto;
 
-struct CreateProject {
+pub struct Project {
     code: String,
     name: String,
 }
 
-impl CreateProject {
-    fn new(code: &str, name: &str) -> Self {
+impl Project {
+    pub fn new(code: &str, name: &str) -> Self {
         Self {
             code: code.into(),
             name: name.into(),
@@ -33,19 +32,4 @@ impl CreateProject {
     }
 }
 
-impl Command for CreateProject {
-    fn execute(&self) -> Result<(), CommandError> {
-        Ok(())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn should_create_project() {
-        let command = CreateProject::new("project", "some project");
-        assert!(command.execute().is_ok());
-    }
-}
+impl Dto for Project {}
