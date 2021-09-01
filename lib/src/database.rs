@@ -17,6 +17,7 @@
 */
 
 use std::path::Path;
+use std::path::PathBuf;
 
 use directories::ProjectDirs;
 use sqlx::sqlite::Sqlite;
@@ -41,9 +42,9 @@ async fn connect_with(filename: &Path) -> Result<Pool<Sqlite>, sqlx::Error> {
 }
 
 /// Return the default filename for the database.
-fn default_filename() -> Path {
+fn default_filename() -> PathBuf {
     match ProjectDirs::from("me", "JulioBiason", "tin.sqlite3") {
-        Some(project_dir) => Path(project_dir.config_dir()),
-        None => Path("tin.sqlite3"),
+        Some(project_dir) => Path::new(project_dir.config_dir()).to_path_buf(),
+        None => Path::new("tin.sqlite3").to_path_buf(),
     }
 }

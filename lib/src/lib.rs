@@ -16,13 +16,5 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// mod database;
+mod database;
 mod domain;
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
