@@ -21,7 +21,7 @@ pub trait Dto {}
 
 /// Trait that all commands must implement.
 pub trait Command<T: Dto> {
-    fn execute(self) -> Result<T, CommandError>;
+    async fn execute(self) -> Result<T, CommandError>;
 }
 
 /// Errors produced by invalid commands

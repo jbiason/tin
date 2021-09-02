@@ -16,36 +16,26 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+use sqlx::sqlite::Sqlite;
+use sqlx::Pool;
+
 use super::dto::Project;
-use super::repository::Repository;
-use crate::database;
-use crate::domain::command::Command;
-use crate::domain::command::CommandError;
 
-struct Create(Project);
-
-impl Create {
-    fn new(project: Project) -> Self {
-        Self(project)
-    }
+struct Repository<'a> {
+    pool: &'a Pool<Sqlite>,
 }
 
-impl Command<Project> for Create {
-    async fn execute(self) -> Result<Project, CommandError> {
-        let pool = database::connect().await?;
-        let repo = Repository::new(&pool);
-        Ok(self.0)
+impl<'a> Repository<'a> {
+    fn new(pool: &'a Pool<Sqlite>) -> Self {
+        Self { pool }
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn should_create_project() {
-        let project = Project::new("project", "some project");
-        let command = Create::new(project);
-        assert!(command.execute().is_ok());
+    async fn save(&self, project: Project) -> Result<Project, sqlx::Error> {
+        sqlx::query(r#"INSERT INTO project (code, name) VALUES (?, ?)"#)
+            .bind(&project.code())
+            .bind(&project.name())
+            .execute(self.pool)
+            .await?;
+        Ok(project)
     }
 }

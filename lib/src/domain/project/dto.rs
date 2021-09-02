@@ -30,6 +30,14 @@ impl Project {
             name: name.into(),
         }
     }
+
+    pub fn code(&self) -> &str {
+        &self.code
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
 }
 
 impl Dto for Project {}

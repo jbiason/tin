@@ -1,6 +1,6 @@
 -- Projects
 CREATE TABLE project (
-	id INTEGER NOT NULL PRIMARY KEY,
+	code TEXT NOT NULL PRIMARY KEY,
 	name TEXT NOT NULL
 );
 CREATE UNIQUE INDEX project_name ON project (name);
