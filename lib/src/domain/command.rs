@@ -16,16 +16,27 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+use async_trait::async_trait;
+
 /// Trait/tag for DTOs
 pub trait Dto {}
 
 /// Trait that all commands must implement.
+#[async_trait]
 pub trait Command<T: Dto> {
-    async fn execute(self) -> Result<T, CommandError>;
+    async fn execute(&self) -> Result<&T, CommandError>;
 }
 
 /// Errors produced by invalid commands
 pub enum CommandError {
     /// The request identified used in the command is already used.
     IdentifierAlreadyUsed(String),
+    /// Erro with the database
+    DatabaseError,
+}
+
+impl From<sqlx::Error> for CommandError {
+    fn from(_error: sqlx::Error) -> Self {
+        Self::DatabaseError
+    }
 }

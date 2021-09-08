@@ -16,6 +16,8 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+use async_trait::async_trait;
+
 use super::dto::Project;
 use super::repository::Repository;
 use crate::database;
@@ -30,11 +32,13 @@ impl Create {
     }
 }
 
+#[async_trait]
 impl Command<Project> for Create {
-    async fn execute(self) -> Result<Project, CommandError> {
+    async fn execute(&self) -> Result<&Project, CommandError> {
         let pool = database::connect().await?;
         let repo = Repository::new(&pool);
-        Ok(self.0)
+        repo.save(&self.0).await?;
+        Ok(&self.0)
     }
 }
 

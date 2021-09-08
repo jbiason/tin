@@ -21,21 +21,21 @@ use sqlx::Pool;
 
 use super::dto::Project;
 
-struct Repository<'a> {
+pub struct Repository<'a> {
     pool: &'a Pool<Sqlite>,
 }
 
 impl<'a> Repository<'a> {
-    fn new(pool: &'a Pool<Sqlite>) -> Self {
+    pub fn new(pool: &'a Pool<Sqlite>) -> Self {
         Self { pool }
     }
 
-    async fn save(&self, project: Project) -> Result<Project, sqlx::Error> {
+    pub async fn save(&self, project: &Project) -> Result<(), sqlx::Error> {
         sqlx::query(r#"INSERT INTO project (code, name) VALUES (?, ?)"#)
             .bind(&project.code())
             .bind(&project.name())
             .execute(self.pool)
             .await?;
-        Ok(project)
+        Ok(())
     }
 }

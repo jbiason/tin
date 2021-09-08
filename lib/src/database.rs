@@ -25,11 +25,11 @@ use sqlx::sqlite::SqliteConnectOptions;
 use sqlx::sqlite::SqlitePoolOptions;
 use sqlx::Pool;
 
-async fn connect() -> Result<Pool<Sqlite>, sqlx::Error> {
+pub async fn connect() -> Result<Pool<Sqlite>, sqlx::Error> {
     connect_with(&default_filename()).await
 }
 
-async fn connect_with(filename: &Path) -> Result<Pool<Sqlite>, sqlx::Error> {
+pub async fn connect_with(filename: &Path) -> Result<Pool<Sqlite>, sqlx::Error> {
     let pool = SqlitePoolOptions::new()
         .connect_with(
             SqliteConnectOptions::new()
