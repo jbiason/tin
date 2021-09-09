@@ -16,6 +16,8 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+use std::convert::Infallible;
+
 use async_trait::async_trait;
 
 /// Trait/tag for DTOs
@@ -37,6 +39,12 @@ pub enum CommandError {
 
 impl From<sqlx::Error> for CommandError {
     fn from(_error: sqlx::Error) -> Self {
+        Self::DatabaseError
+    }
+}
+
+impl From<Infallible> for CommandError {
+    fn from(_error: Infallible) -> Self {
         Self::DatabaseError
     }
 }

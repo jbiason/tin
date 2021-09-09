@@ -37,7 +37,9 @@ pub async fn connect_with(filename: &Path) -> Result<Pool<Sqlite>, sqlx::Error> 
                 .create_if_missing(true),
         )
         .await?;
+    log::debug!("Starting migration...");
     sqlx::migrate!("./migrations").run(&pool).await?;
+    log::debug!("Migration concluded");
     Ok(pool)
 }
 

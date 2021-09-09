@@ -16,6 +16,9 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+use std::path::PathBuf;
+use std::str::FromStr;
+
 use async_trait::async_trait;
 
 use super::dto::Project;
@@ -35,7 +38,12 @@ impl Create {
 #[async_trait]
 impl Command<Project> for Create {
     async fn execute(&self) -> Result<&Project, CommandError> {
-        let pool = database::connect().await?;
+        log::debug!(
+            "Creating project \"{}\": \"{}\"",
+            self.0.code(),
+            self.0.name()
+        );
+        let pool = database::connect_with(PathBuf::from_str("./test.sqlite")?.as_path()).await?;
         let repo = Repository::new(&pool);
         repo.save(&self.0).await?;
         Ok(&self.0)
@@ -46,10 +54,11 @@ impl Command<Project> for Create {
 mod tests {
     use super::*;
 
-    #[test]
-    fn should_create_project() {
+    #[tokio::test]
+    async fn should_create_project() {
+        env_logger::init();
         let project = Project::new("project", "some project");
         let command = Create::new(project);
-        assert!(command.execute().is_ok());
+        assert!(command.execute().await.is_ok());
     }
 }
