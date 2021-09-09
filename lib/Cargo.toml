@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
+async-trait = "0.1"
 directories = "3.0"
+env_logger = "0.8"
+log = "0.4"
+log-derive = "0.4"
 sqlx = { version = "0.5", default-features = false, features = [ "sqlite", "chrono", "macros", "migrate", "runtime-tokio-rustls"] }
 tokio = { version = "1.6", features = [ "rt", "macros" ] }
-async-trait = "0.1"
