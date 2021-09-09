@@ -1,4 +1,3 @@
--- Projects
 CREATE TABLE project (
 	code TEXT NOT NULL PRIMARY KEY,
 	name TEXT NOT NULL
@@ -8,7 +7,7 @@ CREATE UNIQUE INDEX project_name ON project (name);
 CREATE TABLE tag (
 	id INTEGER NOT NULL PRIMARY KEY,
 	label TEXT NOT NULL
-)
+);
 CREATE UNIQUE INDEX tag_label ON tag (label);
 
 CREATE TABLE entry (
@@ -23,7 +22,7 @@ CREATE TABLE entry_tags (
 	id INTEGER NOT NULL PRIMARY KEY,
 	entry_id INTEGER NOT NULL,
 	tag_id INTEGER NOT NULL,
-	CONSTRAINT UNIQUE (entry_id, tag_id),
+	UNIQUE (entry_id, tag_id),
 	FOREIGN KEY (entry_id) REFERENCES entry (id),
 	FOREIGN KEY (tag_id) REFERENCES tag (id)
-)
+);
