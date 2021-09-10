@@ -16,6 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -54,11 +55,30 @@ impl Command<Project> for Create {
 mod tests {
     use super::*;
 
+    fn delete_temp_database() {
+        fs::read_dir(".")
+            .unwrap()
+            .map(|entry| {
+                entry
+                    .unwrap()
+                    .path()
+                    .file_name()
+                    .unwrap()
+                    .to_ascii_lowercase()
+                    .into_string()
+                    .unwrap()
+            })
+            .filter(|filename| filename.starts_with("test.sqlite"))
+            .for_each(|filename| fs::remove_file(filename).unwrap());
+    }
+
     #[tokio::test]
     async fn should_create_project() {
         env_logger::init();
+        delete_temp_database();
         let project = Project::new("project", "some project");
         let command = Create::new(project);
         assert!(command.execute().await.is_ok());
+        delete_temp_database();
     }
 }
